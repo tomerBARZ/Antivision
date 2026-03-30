@@ -1,0 +1,98 @@
+---
+- hosts: orangepi
+  gather_facts: true
+  vars:
+    app_dir: "/home/{{ ansible_user }}/antivision"
+    venv_dir: "{{ app_dir }}/.venv"
+
+  tasks:
+    - name: Install OS packages
+      become: true
+      apt:
+        update_cache: true
+        name:
+          - python3
+          - python3-venv
+          - python3-pip
+          - python3-opencv
+          - rsync
+        state: present
+
+    - name: Install build dependencies
+      become: true
+      apt:
+        name:
+          - build-essential
+          - python3-dev
+          - libffi-dev
+          - libssl-dev
+        state: present
+
+    - name: Create app directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Sync project files to OrangePi
+      synchronize:
+        src: "{{ playbook_dir }}/../"
+        dest: "{{ app_dir }}/"
+        delete: true
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.venv"
+          - "--exclude=deploy"
+          - "--exclude=__pycache__"
+          - "--exclude=.pytest_cache"
+          - "--exclude=.mypy_cache"
+      notify: Restart Antivision
+
+    - name: Install Python dependencies
+      pip:
+        requirements: "{{ app_dir }}/requirements.txt"
+        executable: "{{ venv_dir }}/bin/pip"
+      notify: Restart Antivision
+
+    - name: Ensure venv support is installed
+      become: true
+      apt:
+        name:
+          - python3
+          - python3-venv
+          - python3-pip
+        state: present
+        update_cache: true
+
+    - name: Create virtual environment
+      command: /usr/bin/python3 -m venv --system-site-packages {{ venv_dir }}
+      args:
+        creates: "{{ venv_dir }}/bin/activate"
+
+    - name: Install Python dependencies
+      pip:
+        requirements: "{{ app_dir }}/requirements.txt"
+        executable: "{{ venv_dir }}/bin/pip"
+
+    - name: Install systemd service
+      become: true
+      template:
+        src: templates/antivision.service.j2
+        dest: /etc/systemd/system/antivision.service
+        mode: "0644"
+      notify: Restart Antivision
+
+    - name: Enable and start Antivision
+      become: true
+      systemd:
+        name: antivision
+        enabled: true
+        state: started
+        daemon_reload: true
+
+  handlers:
+    - name: Restart Antivision
+      become: true
+      systemd:
+        name: antivision
+        state: restarted

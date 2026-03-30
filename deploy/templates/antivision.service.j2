@@ -1,0 +1,14 @@
+[Unit]
+Description=Antivision
+After=network.target
+
+[Service]
+Type=simple
+User={{ ansible_user }}
+WorkingDirectory={{ app_dir }}
+ExecStart={{ venv_dir }}/bin/python3 {{ app_dir }}/app/main.py
+Restart=always
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

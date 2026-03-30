@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Deploy to OrangePi (WSL)",
+      "type": "shell",
+      "command": "wsl.exe bash -lc 'cd /mnt/d/-1/Vision/antivision/deploy && ansible-playbook -i inventory.ini deploy.yml'",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

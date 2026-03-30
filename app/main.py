@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, Response
 import cv2
 
@@ -14,6 +16,9 @@ gstreamer_pipeline = (
 
 # Open the camera globally so it doesn't initialize on every page refresh
 cap = cv2.VideoCapture(gstreamer_pipeline, cv2.CAP_GSTREAMER)
+cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
+time.sleep(0.1)
+cap.set(cv2.CAP_PROP_EXPOSURE, -2)
 
 if not cap.isOpened():
     print("CRITICAL: Failed to open camera!")
@@ -26,6 +31,8 @@ def generate_frames():
         if not success:
             break
         
+        frame = cv2.circle(frame,(500,250), 50, 200, 2)
+
         # Encode the raw grayscale frame into a JPEG memory buffer
         ret, buffer = cv2.imencode('.jpg', frame)
         frame_bytes = buffer.tobytes()
