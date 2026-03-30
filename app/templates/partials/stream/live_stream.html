@@ -1,0 +1,21 @@
+<div class="settings-section">
+    <div class="section-header">
+        <h2 class="section-title">Live Stream</h2>
+        <p class="section-subtitle">{{ request.host_url.rstrip('/') }}/video_feed</p>
+    </div>
+
+    <div class="stream-box">
+        <img
+            src="{{ url_for('video_feed') }}"
+            alt="Live camera stream"
+            class="stream-image"
+        >
+    </div>
+
+    <div class="metrics">
+        <div class="metric"><span class="metric__key">tx:</span> -14.69°</div>
+        <div class="metric"><span class="metric__key">ty:</span> +10.66°</div>
+        <div class="metric"><span class="metric__key">ta:</span> +4.380%</div>
+        <div class="metric"><span class="metric__key">tl:</span> +12.9</div>
+    </div>
+</div>

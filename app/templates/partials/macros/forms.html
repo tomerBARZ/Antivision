@@ -1,0 +1,12 @@
+{% macro setting_label(text, hint=None) %}
+<label class="form-label">
+    <span class="setting-label">
+        <span class="tooltip-trigger" tabindex="0" aria-label="More info">
+        {{ text }}
+        {% if hint %}
+                <span class="tooltip-box">{{ hint }}</span>
+            </span>
+        {% endif %}
+    </span>
+</label>
+{% endmacro %}

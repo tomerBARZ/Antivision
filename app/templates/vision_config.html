@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Vision Config{% endblock %}
+
+{% block content %}
+<div class="app-shell">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+        <div class="topbar__left">
+            <div class="app-title">
+                <p style="display: inline-block;color: var(--accent);">ANTI</p>VISION
+            </div>
+        </div>
+
+        <div class="topbar__right">
+            <div class="stat-pill">
+                <span class="stat-pill__label">FPS</span>
+                <span class="stat-pill__value" id="fps-stat">66.5</span>
+            </div>
+            <div class="stat-pill">
+                <span class="stat-pill__label">Temp</span>
+                <span class="stat-pill__value" id="temp-stat">42.1°C</span>
+            </div>
+            <div class="stat-pill">
+                <span class="stat-pill__label">Latency</span>
+                <span class="stat-pill__value" id="latency-stat">12.9ms</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-grid">
+
+        <section class="settings-column">
+            {% include "partials/settings/detection.html" %}
+            {% include "partials/settings/cropping.html" %}
+            {% include "partials/settings/grouping.html" %}
+            {% include "partials/settings/cropping.html" %}
+            {% include "partials/stream/stream_controls.html" %}
+        </section>
+
+        <section class="settings-column">
+            {% include "partials/settings/grouping.html" %}
+            {% include "partials/settings/advanced.html" %}
+            {% include "partials/settings/cropping.html" %}
+            {% include "partials/settings/grouping.html" %}
+            {% include "partials/stream/stream_controls.html" %}
+        </section>
+
+        <aside class="stream-column">
+            <div class="stream-fixed">
+                {% include "partials/stream/live_stream.html" %}
+            </div>
+
+            <div class="stream-scroll">
+                <div class="stream-scroll-inner">
+                    {% include "partials/stream/stream_controls.html" %}
+                    {% include "partials/settings/grouping.html" %}
+                    {% include "partials/stream/stream_controls.html" %}
+                    {% include "partials/stream/stream_controls.html" %}
+                    <!-- more right-side blocks here -->
+                </div>
+            </div>
+        </aside>
+
+    </main>
+</div>
+{% endblock %}

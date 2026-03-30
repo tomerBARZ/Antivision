@@ -1,6 +1,6 @@
 import time
 
-from flask import Flask, Response, render_template
+from flask import Flask, Response, jsonify, render_template, request
 import cv2
 
 from input.OV9281_input import OV9281
@@ -10,11 +10,12 @@ app = Flask(__name__)
 
 cap = DroidCam()
 
+setting_callbacks = {}
+settings_store = {}
+
 if not cap.isOpen:
     print("CRITICAL: Failed to open camera!")
     exit()
-
-frame = cap.getFrame()
 
 def generate_frames():
     """Generator function that constantly reads frames and encodes them for the web."""
@@ -33,11 +34,59 @@ def generate_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
-@app.route('/test')
-def testPage():
-    return render_template('index.html',settings=cap.getSettings())
+
+def on_setting(name):
+    def decorator(func):
+        setting_callbacks[name] = func
+        return func
+    return decorator
+
+@on_setting("marker_size")
+def update_marker_size(value):
+    print("marker_size callback:", value)
+
+@on_setting("detector_downscale")
+def update_downscale(value):
+    print("detector_downscale callback:", value)
+
+def handle_setting_change(name, value):
+    callback = setting_callbacks.get(name)
+    if callback:
+        callback(value)
+    else:
+        print(f"No callback registered for {name}, value={value}")
+
+@app.post("/api/settings")
+def api_settings():
+    data = request.get_json()
+    name = data.get("name")
+    value = data.get("value")
+
+    if not name:
+        return jsonify(ok=False, error="Missing setting name"), 400
+
+    settings_store[name] = value
+    handle_setting_change(name, value)
+
+    return jsonify(ok=True, name=name, value=value)
 
 @app.route('/')
+def testPage():
+    return render_template(
+        "vision_config.html",
+        pipelines=["Pipeline_Name", "AprilTags", "Retroreflective"],
+        active_pipeline=0
+    )
+
+@app.route("/api/stats")
+def api_stats():
+    return {
+        "fps": 69.5,
+        "temperature": 42.1,
+        "latency": 12.9
+    }
+
+@app.route("/video_feed")
 def video_feed():
     """The route that serves the continuous video stream."""
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')

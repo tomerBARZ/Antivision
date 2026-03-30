@@ -1,0 +1,77 @@
+<div class="settings-section">
+    <div class="section-header">
+        <h2 class="section-title">Preview & Output</h2>
+        <p class="section-subtitle">Controls related to what the stream shows</p>
+    </div>
+
+    <div class="settings-grid settings-grid--compact">
+        <div class="form-row">
+            <label class="form-label">Preview Step</label>
+            <select class="input">
+                <option selected>Step 0</option>
+                <option>Raw Input</option>
+                <option>Thresholded</option>
+                <option>Contours</option>
+                <option>Output</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Crosshair</label>
+            <select class="input">
+                <option selected>Enabled</option>
+                <option>Disabled</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Overlay Mode</label>
+            <select class="input">
+                <option selected>Targets</option>
+                <option>None</option>
+                <option>Bounding Boxes</option>
+                <option>Debug</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Snapshot</label>
+            <button class="btn">Take Snapshot</button>
+        </div>
+    </div>
+</div>
+
+<div class="settings-section">
+    <div class="section-header">
+        <h2 class="section-title">Quick Runtime</h2>
+        <p class="section-subtitle">Frequently changed runtime options</p>
+    </div>
+
+    <div class="settings-grid settings-grid--compact">
+        <div class="form-row">
+            <label class="form-label">LED Mode</label>
+            <select class="input">
+                <option selected>Pipeline</option>
+                <option>On</option>
+                <option>Off</option>
+                <option>Blink</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Exposure</label>
+            <div class="inline-control">
+                <input type="number" class="input input--short" value="50" step="1">
+                <input type="range" class="slider" min="0" max="100" value="50" step="1">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Gain</label>
+            <div class="inline-control">
+                <input type="number" class="input input--short" value="12" step="1">
+                <input type="range" class="slider" min="0" max="32" value="12" step="1">
+            </div>
+        </div>
+    </div>
+</div>

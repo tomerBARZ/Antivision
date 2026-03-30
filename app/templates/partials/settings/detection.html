@@ -1,0 +1,43 @@
+
+{% from "partials/macros/forms.html" import setting_label %}
+
+<div class="settings-section">
+    <div class="section-header">
+        <h2 class="section-title">Detection</h2>
+        <p class="section-subtitle">Core target detection settings</p>
+    </div>
+
+    <div class="settings-grid">
+        <div class="form-row">
+            <label class="form-label">Family</label>
+            <select class="input">
+                <option selected>AprilTag Classic 36h11 (587 tags)</option>
+                <option>AprilTag 16h5</option>
+                <option>AprilTag 25h9</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            {{ setting_label("Marker Size (mm)", "Physical size of the target in millimeters.") }}
+            <div class="inline-control">
+                <input type="number" class="input input--short" value="152.4" step="0.1" data-setting="marker_size">
+                <input type="range" class="slider" min="0" max="500" value="152.4" step="0.1" data-setting="marker_size">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Detector Downscale</label>
+            <select class="input" data-setting="detector_downscale">
+                <option>1</option>
+                <option selected>2</option>
+                <option>4</option>
+                <option>8</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">ID Filters</label>
+            <input type="text" class="input" value="0" placeholder="Comma-separated IDs">
+        </div>
+    </div>
+</div>
