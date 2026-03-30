@@ -1,34 +1,26 @@
 import time
 
-from flask import Flask, Response
+from flask import Flask, Response, render_template
 import cv2
+
+from input.OV9281_input import OV9281
+from input.DroidCam_input import DroidCam
 
 app = Flask(__name__)
 
-# Your exact working GStreamer pipeline
-gstreamer_pipeline = (
-    "v4l2src device=/dev/video8 io-mode=2 ! "
-    "video/x-raw,format=UYVY,width=1280,height=800,framerate=30/1 ! "
-    "videoconvert ! "
-    "video/x-raw,format=GRAY8 ! "
-    "appsink drop=true sync=false"
-)
+cap = DroidCam()
 
-# Open the camera globally so it doesn't initialize on every page refresh
-cap = cv2.VideoCapture(gstreamer_pipeline, cv2.CAP_GSTREAMER)
-cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 1)
-time.sleep(0.1)
-cap.set(cv2.CAP_PROP_EXPOSURE, -2)
-
-if not cap.isOpened():
+if not cap.isOpen:
     print("CRITICAL: Failed to open camera!")
     exit()
+
+frame = cap.getFrame()
 
 def generate_frames():
     """Generator function that constantly reads frames and encodes them for the web."""
     while True:
-        success, frame = cap.read()
-        if not success:
+        frame = cap.getFrame()
+        if frame is None:
             break
         
         frame = cv2.circle(frame,(500,250), 50, 200, 2)
@@ -40,6 +32,10 @@ def generate_frames():
         # Yield the frame in the standard multipart/x-mixed-replace MJPEG format
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+@app.route('/test')
+def testPage():
+    return render_template('index.html',settings=cap.getSettings())
 
 @app.route('/')
 def video_feed():
