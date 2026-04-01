@@ -1,10 +1,10 @@
 from .setting import Setting
 
 class Slider(Setting):
-    def __init__(self, name, description, minVal, maxVal, defaultValue = 0):
+    def __init__(self, name,id, description, minVal, maxVal, defaultValue = 0):
         self.minVal = minVal
         self.maxVal = maxVal
-        super().__init__(name, description, max(self.minVal,defaultValue))
+        super().__init__(name, id, description, max(self.minVal,defaultValue))
 
     def getValue(self):
         return self.value

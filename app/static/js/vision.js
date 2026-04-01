@@ -25,7 +25,6 @@ async function refreshStats() {
 
         document.getElementById("fps-stat").textContent = data.fps;
         document.getElementById("temp-stat").textContent = `${data.temperature}°C`;
-        document.getElementById("latency-stat").textContent = `${data.latency}ms`;
     } catch (err) {
         console.error("Failed to fetch stats:", err);
     }

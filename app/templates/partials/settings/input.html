@@ -1,0 +1,31 @@
+
+{% from "partials/macros/forms.html" import setting_label %}
+
+<div class="settings-section">
+    <div class="section-header">
+        <h2 class="section-title">Input</h2>
+        <p class="section-subtitle">Camera Settings</p>
+    </div>
+
+    <div class="settings-grid">
+        {%for setting in inputSettings %}
+        <div class="form-row">
+            {{ setting_label(setting.name, setting.description, setting.default) }}
+            <div class="inline-control">
+                <input type="number" class="input input--short" value={{setting.value}} data-setting="{{setting.name}}">
+                <input type="range" class="slider" min={{setting.minVal}} max={{setting.maxVal}} value={{setting.value}} data-setting="{{setting.name}}">
+            </div>
+        </div>
+        {%endfor%}
+
+        <div class="form-row">
+            <label class="form-label">Camera Orientation</label>
+            <select class="input" data-setting="orientation">
+                <option value="Normal" {% if selected_orientation == "Normal" %}selected{% endif %}>Normal</option>
+                <option value="Flipped" {% if selected_orientation == "Flipped" %}selected{% endif %}>Flipped</option>
+                <option value="Rotated Clockwise" {% if selected_orientation == "Rotated Clockwise" %}selected{% endif %}>Rotated Clockwise</option>
+                <option value="Rotated Counterclockwise" {% if selected_orientation == "Rotated Counterclockwise" %}selected{% endif %}>Rotated Counterclockwise</option>
+            </select>
+        </div>
+    </div>
+</div>

@@ -22,16 +22,13 @@
                 <span class="stat-pill__label">Temp</span>
                 <span class="stat-pill__value" id="temp-stat">42.1°C</span>
             </div>
-            <div class="stat-pill">
-                <span class="stat-pill__label">Latency</span>
-                <span class="stat-pill__value" id="latency-stat">12.9ms</span>
-            </div>
         </div>
     </header>
 
     <main class="content-grid">
 
         <section class="settings-column">
+            {% include "partials/settings/input.html" %}
             {% include "partials/settings/detection.html" %}
             {% include "partials/settings/cropping.html" %}
             {% include "partials/settings/grouping.html" %}
