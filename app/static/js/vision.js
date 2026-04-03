@@ -78,6 +78,25 @@ async function sendSettingUpdate(name, value) {
     }
 }
 
+async function sendButtonPress(name, text) {
+    try {
+        const res = await fetch("/api/button-press", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, text })
+        });
+
+        const data = await res.json();
+        if (!data.ok) {
+            console.error("Button press callback failed:", data);
+        }
+    } catch (err) {
+        console.error("Error sending button press:", err);
+    }
+}
+
 const debounceTimers = new Map();
 
 function debounceSetting(name, callback, delay = 120) {
@@ -125,5 +144,24 @@ document.addEventListener("DOMContentLoaded", () => {
             syncSettingElements(name, value, el);
             sendSettingUpdate(name, value);
         }
+    });
+
+    document.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-button], input[type='button'][data-button], input[type='submit'][data-button]");
+        if (!btn) return;
+
+        const name =
+            btn.dataset.button ||
+            btn.name ||
+            btn.id ||
+            btn.value ||
+            btn.textContent.trim();
+
+        const text =
+            btn.textContent?.trim() ||
+            btn.value ||
+            name;
+
+        sendButtonPress(name, text);
     });
 });

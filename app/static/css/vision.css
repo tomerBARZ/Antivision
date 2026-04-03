@@ -273,6 +273,22 @@ button {
     color: var(--accent);
 }
 
+.btn:disabled,
+.btn[disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--border);
+    background: var(--bg-elev);
+    color: var(--text-muted);
+}
+
+.btn:disabled:hover,
+.btn[disabled]:hover {
+    border-color: var(--border);
+    color: var(--text-muted);
+}
+
 /* Optional wrapper if still present in HTML */
 .stream-panel {
     background: transparent;

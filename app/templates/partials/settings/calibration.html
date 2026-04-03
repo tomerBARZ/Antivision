@@ -1,0 +1,57 @@
+{% from "partials/macros/forms.html" import setting_label %}
+
+<div class="settings-section">
+    <div class="section-header">
+        <h2 class="section-title">Calibration</h2>
+        <p class="section-subtitle">Lens Distortion Adjustment</p>
+    </div>
+
+    <div class="settings-grid">
+        {% if not aruco_settings[3] %}
+            <div class="form-row">
+                {{ setting_label("Charuco Dimensions:", "(X, Y, Size in mm)", None) }}
+                <div class="metrics" style="flex-wrap: nowrap;align-items: center;">
+                    <span style="flex-direction: row; display: flex; justify-content: space-between;align-items: center;">
+                    <input type="number" class="input input--short" value={{aruco_settings[0]}} max="15" min="1" data-setting="charuco_x" id="charuco_x"/>
+                    <p>x</p>
+                    <input type="number" class="input input--short" value={{aruco_settings[1]}} max="15" min="1" data-setting="charuco_y" id="charuco_y"/>
+                    </span>
+                    <input type="number" class="input input--short" value={{aruco_settings[2] * 100}} min="10" data-setting="charuco_mm" id="charuco_mm"/>
+                    <p>mm</p>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Undistortion</label>
+                <select class="input" data-setting="undistortion">
+                    <option value="Disabled" {% if selected_undistortion == "Disabled" %}selected{% endif %}>Disabled</option>
+                    <option value="Active" {% if selected_undistortion == "Active" %}selected{% endif %}>Active</option>
+                </select>
+            </div>
+        {% else %}
+            <div class="stream-box">
+                <img
+                    src="{{ url_for('calibration_feed') }}"
+                    alt="Live camera stream"
+                    class="stream-image"
+                >
+            </div>
+        {% endif %}
+
+        <div class="form-row">
+            <a href="/calib_image.jpg" class="btn">Calibration Image</a>
+            <div class="metrics">
+                <form method="get" action="/" style="display:inline;">
+                    <button class="btn" {% if aruco_settings[3] %}disabled{% endif %} data-button="calibration" {% if isCalibrated %} style="background-color: springgreen;" {% endif %}>Begin Calibration</button>
+                </form>
+                <button class="btn" {% if not aruco_settings[3] %} disabled {% endif %} data-button="calibration">Capture Detections</button>
+                <form method="get" style="display:inline;">
+                    <button class="btn" {% if not aruco_settings[3] %} disabled {% endif %} data-button="calibration"
+                        onclick="setTimeout(() => location.reload(), 1000)">Finish</button>
+                    <button class="btn" {% if not aruco_settings[3] %} disabled {% endif %} data-button="calibration"
+                        onclick="setTimeout(() => location.reload(), 1000)">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

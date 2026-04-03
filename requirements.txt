@@ -1,3 +1,4 @@
 flask>=2.0
 psutil
 tinydb
+opencv-contrib-python
