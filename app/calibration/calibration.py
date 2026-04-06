@@ -7,17 +7,22 @@ def generate_charuco_board(squares_x, squares_y, square_length):
 
     dictionary = aruco.getPredefinedDictionary(aruco.DICT_4X4_250)
 
-    board = aruco.CharucoBoard((squares_x, squares_y), square_length, marker_length, dictionary)
-
     image_size = (squares_x * 100, squares_y * 100) 
-    board_image = board.generateImage(image_size, marginSize=10, borderBits=1)
+    try:
+        board = aruco.CharucoBoard((squares_x, squares_y), square_length, marker_length, dictionary)
+        board_image = board.generateImage(image_size, marginSize=10, borderBits=1)
+    except:
+        board = aruco.CharucoBoard_create(squares_x, squares_y, square_length, marker_length, dictionary)
+        board_image = board.draw((image_size[0], image_size[1]))
+
 
     return board_image, board
 
 def detect_charuco(frame, board, dictionary):
-    gray = frame if frame.shape[2] == 1 else cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if len(frame.shape) > 2:
+        frame= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    marker_corners, marker_ids, _ = aruco.detectMarkers(gray, dictionary)
+    marker_corners, marker_ids, _ = aruco.detectMarkers(frame, dictionary)
 
     if marker_ids is None or len(marker_ids) == 0:
         return None, None, marker_corners, marker_ids
@@ -25,7 +30,7 @@ def detect_charuco(frame, board, dictionary):
     retval, charuco_corners, charuco_ids = aruco.interpolateCornersCharuco(
         marker_corners,
         marker_ids,
-        gray,
+        frame,
         board
     )
 

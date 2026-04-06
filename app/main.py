@@ -132,6 +132,11 @@ def generate_calibration_frames():
             if marker_ids is None or len(marker_ids) <= 0:
                 continue
             
+
+
+            if len(frame.shape) <= 2:
+                vis = cv2.cvtColor(vis, cv2.COLOR_GRAY2BGR)
+
             cv2.aruco.drawDetectedMarkers(vis, marker_corners, None)
             if(calibrationMap is not None):
                 vis = cv2.hconcat([vis, calibrationMap])
@@ -385,11 +390,9 @@ def handle_calibration(value):
                 settings_store['calibrating'] = False
         settings_store['calibration_all_corners'] = []
         settings_store['calibration_all_ids'] = []
-        print(settings_store['calibrating'])
 
 @app.route('/')
 def index():
-    print(get_aruco_settings())
     return render_template(
         "vision_config.html",
         inputSettings=capSettings.values(),
