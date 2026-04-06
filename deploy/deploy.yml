@@ -15,17 +15,11 @@
           - python3-venv
           - python3-pip
           - python3-opencv
-          - rsync
-        state: present
-
-    - name: Install build dependencies
-      become: true
-      apt:
-        name:
           - build-essential
           - python3-dev
           - libffi-dev
           - libssl-dev
+          - rsync
         state: present
 
     - name: Create app directory
@@ -48,22 +42,6 @@
           - "--exclude=.mypy_cache"
       notify: Restart Antivision
 
-    - name: Install Python dependencies
-      pip:
-        requirements: "{{ app_dir }}/requirements.txt"
-        executable: "{{ venv_dir }}/bin/pip"
-      notify: Restart Antivision
-
-    - name: Ensure venv support is installed
-      become: true
-      apt:
-        name:
-          - python3
-          - python3-venv
-          - python3-pip
-        state: present
-        update_cache: true
-
     - name: Create virtual environment
       command: /usr/bin/python3 -m venv --system-site-packages {{ venv_dir }}
       args:
@@ -73,6 +51,7 @@
       pip:
         requirements: "{{ app_dir }}/requirements.txt"
         executable: "{{ venv_dir }}/bin/pip"
+      notify: Restart Antivision
 
     - name: Install systemd service
       become: true
